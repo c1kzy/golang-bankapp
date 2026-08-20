@@ -5,7 +5,7 @@ export
 export PROJECT_ROOT=$(CURDIR)
 
 bankapp-run:
-	@export POSTGRES_HOST=localhost && \
+	@export LOGGER_FOLDER=${PROJECT_ROOT}/out/logs && \
 	go mod tidy && \
 	go run ${PROJECT_ROOT}/cmd/main.go
 
@@ -23,6 +23,15 @@ env-cleanup:
 		echo "Env files cleared"; \
 	else \
 		echo "Cleanup canceled"; \
+	fi
+
+log-cleanup:
+	@read -p "Clean all log files? [y/N]: " ans; \
+	if [ "$$ans" = "y" ]; then \
+		rm -rf ${PROJECT_ROOT}/out/logs && \
+		echo "Log files cleared"; \
+	else \
+		echo "Log cleanup canceled"; \
 	fi
 
 migrate-create:
