@@ -17,14 +17,15 @@ func main() {
 
 	logConfig, err := core_logger.NewConfig()
 	if err != nil {
-		fmt.Println("failed to init logger", err)
-		os.Exit(1)
+		fmt.Println("failed to get logger config", err)
+
+		panic(err)
 	}
 	logger, err := core_logger.NewLogger(logConfig)
 	if err != nil {
 		fmt.Println("failed to initialize logger")
 
-		os.Exit(1)
+		panic(err)
 	}
 
 	serverConfig, err := core_http_server.NewConfig()
