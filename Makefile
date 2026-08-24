@@ -25,7 +25,7 @@ env-cleanup:
 		echo "Cleanup canceled"; \
 	fi
 
-log-cleanup:
+logs-cleanup:
 	@read -p "Clean all log files? [y/N]: " ans; \
 	if [ "$$ans" = "y" ]; then \
 		rm -rf ${PROJECT_ROOT}/out/logs && \

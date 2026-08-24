@@ -1,6 +1,7 @@
 package core_logger
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -13,10 +14,16 @@ import (
 type Logger struct {
 	*logrus.Logger
 
-	file os.File
+	file *os.File
 }
 
-func NewLogger(config Config) (*logrus.Logger, error) {
+type loggerKey struct{}
+
+var (
+	key = loggerKey{}
+)
+
+func NewLogger(config Config) (*Logger, error) {
 	log := logrus.New()
 
 	parsedLevel, err := logrus.ParseLevel(config.Level)
@@ -49,5 +56,21 @@ func NewLogger(config Config) (*logrus.Logger, error) {
 
 	log.SetOutput(io.MultiWriter(os.Stdout, logFile))
 
-	return log, nil
+	return &Logger{
+		Logger: log,
+		file: logFile,
+	}, nil
+}
+
+func ToContext(ctx context.Context, log *logrus.Entry) context.Context {
+	return context.WithValue(ctx, key, log)
+}
+
+func FromContext(ctx context.Context) *logrus.Entry {
+	log, ok := ctx.Value(key).(*logrus.Entry)
+	if !ok {
+		panic("unable to get logger from context")
+	}
+
+	return log
 }
