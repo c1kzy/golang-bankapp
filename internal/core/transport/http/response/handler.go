@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 
+	core_errors "github.com/c1kzy/golang-bankapp/internal/core/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -37,15 +38,15 @@ func (h *ResponseHandler) ErrorResponse(err error, msg string) {
 	)
 
 	switch {
-	case errors.Is(err, ErrInvalidArgument):
+	case errors.Is(err, core_errors.ErrInvalidArgument):
 		statusCode = http.StatusBadRequest
 		logFunc = h.log.Warn
 
-	case errors.Is(err, ErrConflict):
+	case errors.Is(err, core_errors.ErrConflict):
 		statusCode = http.StatusConflict
 		logFunc = h.log.Warn
 
-	case errors.Is(err, ErrNotFound):
+	case errors.Is(err, core_errors.ErrNotFound):
 		statusCode = http.StatusNotFound
 		logFunc = h.log.Debug
 
