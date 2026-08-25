@@ -10,6 +10,7 @@ import (
 
 type UserService interface {
 	CreateUser(ctx context.Context, user domain.User) (domain.User, error)
+	GetUsers(ctx context.Context) ([]domain.User, error)
 }
 
 type UserHTTPHandler struct {
@@ -28,6 +29,11 @@ func (h *UserHTTPHandler) Routes() []core_http_server.Route {
 			Method:  http.MethodPost,
 			Path:    "/users",
 			Handler: h.CreateUser,
+		},
+		{
+			Method:  http.MethodGet,
+			Path:    "/users",
+			Handler: h.GetUsers,
 		},
 	}
 }
