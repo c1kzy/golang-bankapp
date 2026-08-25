@@ -18,7 +18,7 @@ func (r *UserRepository) CreateUser(
 	query := `
 		INSERT INTO bankapp.users (full_name, balance)
 		VALUES ($1, $2)
-		RETURNING id, version, full_name, balance, created_at
+		RETURNING id, version, full_name, balance
 		`
 
 	var userModel UserModel

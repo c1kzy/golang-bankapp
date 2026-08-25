@@ -3,7 +3,6 @@ package core_http_transport
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	core_logger "github.com/c1kzy/golang-bankapp/internal/core/logger"
 	core_http_response "github.com/c1kzy/golang-bankapp/internal/core/transport/http/response"
@@ -14,13 +13,7 @@ type CreateUserRequest struct {
 	Balance  int    `json:"balance"`
 }
 
-type CreateUserResponse struct {
-	ID        int       `json:"id"`
-	Version   int       `json:"version"`
-	FullName  string    `json:"full_name"`
-	Balance   int       `json:"balance"`
-	CreatedAt time.Time `json:"created_at"`
-}
+type CreateUserResponse UserResponse
 
 func (h *UserHTTPHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -44,7 +37,7 @@ func (h *UserHTTPHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userResponse := userDomainToDTO(user)
+	userResponse := CreateUserResponse(userDomainToDTO(user))
 
 	responseHandler.JSONResponse(userResponse, http.StatusOK)
 
