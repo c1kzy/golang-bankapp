@@ -6,6 +6,11 @@ import (
 	"github.com/c1kzy/golang-bankapp/internal/core/domain"
 )
 
+type UserRequest struct {
+	FullName string `json:"full_name"`
+	Balance  *int   `json:"balance"  `
+}
+
 type UserResponse struct {
 	ID       int    `json:"id"`
 	Version  int    `json:"version"`
@@ -41,4 +46,11 @@ func usersDomainToDTO(users []domain.User) []UserResponse {
 	}
 
 	return usersResponse
+}
+
+func userDTOtoUserPatch(request UserRequest) domain.UserPatch {
+	return domain.UserPatch{
+		FullName: request.FullName,
+		Balance:  request.Balance,
+	}
 }

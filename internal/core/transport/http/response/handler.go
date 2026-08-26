@@ -69,3 +69,7 @@ func (h *ResponseHandler) errorResponse(statusCode int, err error, msg string) {
 	h.JSONResponse(response, statusCode)
 
 }
+
+func (h *ResponseHandler) NoContentResponse() {
+	h.w.WriteHeader(http.StatusNoContent)
+}

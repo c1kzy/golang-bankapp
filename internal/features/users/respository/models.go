@@ -10,16 +10,21 @@ type UserModel struct {
 	Balance  int
 }
 
+func userModelToDomain(user UserModel) domain.User {
+	return domain.NewUser(
+		user.ID,
+		user.Version,
+		user.FullName,
+		user.Balance,
+	)
+
+}
+
 func userModelsToDomain(users []UserModel) ([]domain.User, error) {
 	usersDomain := make([]domain.User, len(users))
 
 	for i, user := range users {
-		usersDomain[i] = domain.NewUser(
-			user.ID,
-			user.Version,
-			user.FullName,
-			user.Balance,
-		)
+		usersDomain[i] = userModelToDomain(user)
 	}
 
 	return usersDomain, nil

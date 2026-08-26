@@ -10,10 +10,7 @@ import (
 	core_http_response "github.com/c1kzy/golang-bankapp/internal/core/transport/http/response"
 )
 
-type CreateUserRequest struct {
-	FullName string `json:"full_name"`
-	Balance  *int   `json:"balance"  `
-}
+type CreateUserRequest UserRequest
 
 type CreateUserResponse UserResponse
 

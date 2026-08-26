@@ -7,39 +7,38 @@ import (
 	"github.com/c1kzy/golang-bankapp/internal/core/domain"
 )
 
-func (r *UserRepository) CreateUser(
+func (r *UserRepository) PatchUser(
 	ctx context.Context,
 	user domain.User,
+	id int,
 ) (domain.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.db.OpTimeOut)
 	defer cancel()
 
 	query := `
-		INSERT INTO bankapp.users (full_name, balance)
-		VALUES ($1, $2)
-		RETURNING id, version, full_name, balance
-		`
+	UPDATE bankapp.users
+	SET full_name=$1,
+		balance=$2,
+		version=version+1
+	WHERE id=$3
+	RETURNING id,version, full_name, balance;
+	`
 
 	var userModel UserModel
-
-	row := r.db.QueryRow(ctx, query, user.FullName, user.Balance)
+	row := r.db.QueryRow(ctx, query, user.FullName, user.Balance, user.ID)
 	err := row.Scan(
 		&userModel.ID,
 		&userModel.Version,
 		&userModel.FullName,
 		&userModel.Balance,
 	)
+
 	if err != nil {
-		return domain.User{}, fmt.Errorf("row scan error: %w", err)
+		return domain.User{}, fmt.Errorf("postgres patch user error: %w", err)
 	}
 
-	newUser := domain.NewUser(
-		userModel.ID,
-		userModel.Version,
-		userModel.FullName,
-		userModel.Balance,
-	)
+	patchedUser := userModelToDomain(userModel)
 
-	return newUser, nil
+	return patchedUser, nil
 
 }
