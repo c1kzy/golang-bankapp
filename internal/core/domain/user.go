@@ -42,14 +42,14 @@ func NewUser(
 	}
 }
 
-func (u *User) Validate() error {
-	if u.FullName == "" {
+func validate(fullName string, balance *int) error {
+	if fullName == "" {
 		return fmt.Errorf("Full name cannot be empty: %w",
 			core_errors.ErrInvalidArgument,
 		)
 	}
 
-	fullNameLength := len([]rune(u.FullName))
+	fullNameLength := len([]rune(fullName))
 
 	if fullNameLength < 3 || fullNameLength > 100 {
 		return fmt.Errorf("invalid FullName length: %w",
@@ -57,13 +57,13 @@ func (u *User) Validate() error {
 		)
 	}
 
-	if u.Balance == nil {
+	if balance == nil {
 		return fmt.Errorf("Balance is required: %w",
 			core_errors.ErrInvalidArgument,
 		)
 	}
 
-	if *u.Balance < 0 {
+	if *balance < 0 {
 		return fmt.Errorf("Balance cannot be negative: %w",
 			core_errors.ErrInvalidArgument,
 		)
@@ -72,34 +72,12 @@ func (u *User) Validate() error {
 	return nil
 }
 
+func (u *User) Validate() error {
+	return validate(u.FullName, u.Balance)
+}
+
 func (p *UserPatch) Validate() error {
-	if p.FullName == "" {
-		return fmt.Errorf("Full name cannot be empty: %w",
-			core_errors.ErrInvalidArgument,
-		)
-	}
-
-	fullNameLength := len([]rune(p.FullName))
-
-	if fullNameLength < 3 || fullNameLength > 100 {
-		return fmt.Errorf("invalid FullName length: %w",
-			core_errors.ErrInvalidArgument,
-		)
-	}
-
-	if p.Balance == nil {
-		return fmt.Errorf("Balance is required: %w",
-			core_errors.ErrInvalidArgument,
-		)
-	}
-
-	if *p.Balance < 0 {
-		return fmt.Errorf("Balance cannot be negative: %w",
-			core_errors.ErrInvalidArgument,
-		)
-	}
-
-	return nil
+	return validate(p.FullName, p.Balance)
 }
 
 func (u *User) PatchUser(patch UserPatch) error {

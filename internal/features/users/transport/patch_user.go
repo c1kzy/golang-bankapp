@@ -9,7 +9,7 @@ import (
 	core_http_response "github.com/c1kzy/golang-bankapp/internal/core/transport/http/response"
 )
 
-type UpdateUserRequest UserRequest
+type PatchUserRequest UserRequest
 
 func (h *UserHTTPHandler) PatchUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -23,7 +23,7 @@ func (h *UserHTTPHandler) PatchUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var request UpdateUserRequest
+	var request PatchUserRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		responseHandler.ErrorResponse(err, "unable to decode update user request")
