@@ -10,7 +10,7 @@ import (
 
 type Pool struct {
 	*pgxpool.Pool
-	opTimeOut time.Duration
+	OpTimeOut time.Duration
 }
 
 func NewPostgresPool(ctx context.Context, config Config) (*Pool, error) {
@@ -34,6 +34,6 @@ func NewPostgresPool(ctx context.Context, config Config) (*Pool, error) {
 
 	return &Pool{
 		Pool:      pool,
-		opTimeOut: config.Timeout,
+		OpTimeOut: config.Timeout,
 	}, nil
 }
