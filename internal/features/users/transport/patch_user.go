@@ -1,4 +1,4 @@
-package core_http_transport
+package core_user_transport
 
 import (
 	"encoding/json"

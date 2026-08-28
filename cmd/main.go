@@ -10,9 +10,12 @@ import (
 	core_middleware "github.com/c1kzy/golang-bankapp/internal/core/middleware"
 	core_pgx_pool "github.com/c1kzy/golang-bankapp/internal/core/postgres"
 	core_http_server "github.com/c1kzy/golang-bankapp/internal/core/transport/http"
+	core_transactions_repository "github.com/c1kzy/golang-bankapp/internal/features/transactions/repository"
+	core_transactions_service "github.com/c1kzy/golang-bankapp/internal/features/transactions/service"
+	core_transactions_transport "github.com/c1kzy/golang-bankapp/internal/features/transactions/transport"
 	core_http_respository "github.com/c1kzy/golang-bankapp/internal/features/users/respository"
 	core_http_service "github.com/c1kzy/golang-bankapp/internal/features/users/service"
-	core_http_transport "github.com/c1kzy/golang-bankapp/internal/features/users/transport"
+	core_user_transport "github.com/c1kzy/golang-bankapp/internal/features/users/transport"
 )
 
 func main() {
@@ -47,7 +50,12 @@ func main() {
 	logger.Info("Initializing user feature")
 	userRepository := core_http_respository.NewUserRepository(pool)
 	userService := core_http_service.NewUserService(userRepository)
-	userHandler := core_http_transport.NewUserHTTPHandler(userService)
+	userHandler := core_user_transport.NewUserHTTPHandler(userService)
+
+	logger.Info("Initializing transactions feature")
+	transactionsRepository := core_transactions_repository.NewTransactionsRepository(pool)
+	transactionsService := core_transactions_service.NewTransactionsService(transactionsRepository, userService)
+	transactionsHandler := core_transactions_transport.NewTransactionsHandler(transactionsService)
 
 	logger.Info("Initializing HTTP server")
 	server := core_http_server.NewHTTPServer(
@@ -57,6 +65,7 @@ func main() {
 	)
 
 	server.RegisterRoutes(userHandler.Routes()...)
+	server.RegisterRoutes(transactionsHandler.Routes()...)
 
 	if err := server.Run(ctx); err != nil {
 		logger.Error("Server run error", err)

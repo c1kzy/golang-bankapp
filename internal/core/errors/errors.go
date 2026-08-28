@@ -6,4 +6,5 @@ var (
 	ErrInvalidArgument = errors.New("invalid argument")
 	ErrConflict        = errors.New("conflict")
 	ErrNotFound        = errors.New("not found")
+	ErrBadRequest      = errors.New("bad request")
 )
