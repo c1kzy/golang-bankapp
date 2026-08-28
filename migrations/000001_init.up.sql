@@ -17,6 +17,6 @@ CREATE TABLE bankapp.transactions (
 
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
-    sender_id INT REFERENCES bankapp.users(id),
+    author_user_id INT REFERENCES bankapp.users(id),
     receiver_id INT REFERENCES bankapp.users(id)
 );

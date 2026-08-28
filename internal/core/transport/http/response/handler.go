@@ -50,6 +50,10 @@ func (h *ResponseHandler) ErrorResponse(err error, msg string) {
 		statusCode = http.StatusNotFound
 		logFunc = h.log.Debug
 
+	case errors.Is(err, core_errors.ErrBadRequest):
+		statusCode = http.StatusBadRequest
+		logFunc = h.log.Warn
+
 	default:
 		statusCode = http.StatusInternalServerError
 		logFunc = h.log.Error
