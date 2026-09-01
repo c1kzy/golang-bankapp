@@ -1,1 +1,1 @@
-golang-bankapp
+golang bankapp

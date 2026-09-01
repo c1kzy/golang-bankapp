@@ -10,6 +10,9 @@ import (
 	core_middleware "github.com/c1kzy/golang-bankapp/internal/core/middleware"
 	core_pgx_pool "github.com/c1kzy/golang-bankapp/internal/core/postgres"
 	core_http_server "github.com/c1kzy/golang-bankapp/internal/core/transport/http"
+	core_history_repository "github.com/c1kzy/golang-bankapp/internal/features/history/repository"
+	core_history_service "github.com/c1kzy/golang-bankapp/internal/features/history/service"
+	core_history_transport "github.com/c1kzy/golang-bankapp/internal/features/history/transport"
 	core_transactions_repository "github.com/c1kzy/golang-bankapp/internal/features/transactions/repository"
 	core_transactions_service "github.com/c1kzy/golang-bankapp/internal/features/transactions/service"
 	core_transactions_transport "github.com/c1kzy/golang-bankapp/internal/features/transactions/transport"
@@ -57,6 +60,11 @@ func main() {
 	transactionsService := core_transactions_service.NewTransactionsService(transactionsRepository, userService)
 	transactionsHandler := core_transactions_transport.NewTransactionsHandler(transactionsService)
 
+	logger.Info("Initializing history feature")
+	historyRepository := core_history_repository.NewHistoryRepository(pool)
+	historyService := core_history_service.NewHistoryService(historyRepository)
+	historyTransport := core_history_transport.NewHistoryHandler(historyService)
+
 	logger.Info("Initializing HTTP server")
 	server := core_http_server.NewHTTPServer(
 		serverConfig,
@@ -66,6 +74,7 @@ func main() {
 
 	server.RegisterRoutes(userHandler.Routes()...)
 	server.RegisterRoutes(transactionsHandler.Routes()...)
+	server.RegisterRoutes(historyTransport.Routes()...)
 
 	if err := server.Run(ctx); err != nil {
 		logger.Error("Server run error", err)
