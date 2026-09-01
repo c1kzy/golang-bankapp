@@ -12,7 +12,8 @@ func (r *UserRepository) GetUsers(
 ) ([]domain.User, error) {
 	query := `
 	SELECT id, version, full_name, balance
-	FROM bankapp.users;
+	FROM bankapp.users
+	ORDER BY id DESC;
 	`
 
 	rows, err := r.db.Query(ctx, query)
