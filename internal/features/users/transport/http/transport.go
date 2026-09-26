@@ -1,4 +1,4 @@
-package core_user_transport
+package core_user_transport_http
 
 import (
 	"context"

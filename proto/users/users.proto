@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package users;
+
+option go_package = "github.com/c1kzy/golang-bankapp/generated/users";
+
+service UserService {
+    rpc GetUser(GetUserRequest) returns (User);
+    rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+    rpc CreateUser(CreateUserRequest) returns (User);
+    rpc UpdateUser(UpdateUserRequest) returns (User);
+}
+
+message GetUserRequest {
+    int64 id = 1;
+}
+
+message GetUsersRequest {}
+
+message GetUsersResponse {
+    repeated User users = 1;
+}
+
+message CreateUserRequest {
+    string full_name = 1;
+    int64 balance = 2;
+}
+
+message UpdateUserRequest {
+    int64 id = 1;
+    string full_name = 2;
+    int64 balance = 3;
+}
+
+message User {
+    int64 id = 1;
+    int64 version = 2;
+    string full_name = 3;
+    int64 balance = 4;
+}
