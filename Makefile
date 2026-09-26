@@ -34,6 +34,14 @@ logs-cleanup:
 		echo "Log cleanup canceled"; \
 	fi
 
+protoc:
+	@protoc \
+		--go_out=. \
+		--go_opt=module=github.com/c1kzy/golang-bankapp \
+		--go-grpc_out=. \
+		--go-grpc_opt=module=github.com/c1kzy/golang-bankapp \
+		proto/users/users.proto
+
 migrate-create:
 	@if [ -z "$(seq)" ]; then \
 		echo "seq param is missing. Example: make migrate-create seq=init"; \
