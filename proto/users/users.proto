@@ -2,13 +2,16 @@ syntax = "proto3";
 
 package users;
 
+import "google/protobuf/empty.proto";
+
 option go_package = "github.com/c1kzy/golang-bankapp/generated/users";
 
 service UserService {
     rpc GetUser(GetUserRequest) returns (User);
     rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
     rpc CreateUser(CreateUserRequest) returns (User);
-    rpc UpdateUser(UpdateUserRequest) returns (User);
+    rpc PatchUser(PatchUserRequest) returns (User);
+    rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
 }
 
 message GetUserRequest {
@@ -26,10 +29,14 @@ message CreateUserRequest {
     int64 balance = 2;
 }
 
-message UpdateUserRequest {
+message PatchUserRequest {
     int64 id = 1;
     string full_name = 2;
     int64 balance = 3;
+}
+
+message DeleteUserRequest {
+    int64 id = 1;
 }
 
 message User {
